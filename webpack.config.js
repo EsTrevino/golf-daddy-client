@@ -6,7 +6,7 @@ const isProd = process.env.NODE_ENV === 'production';
 const config = {
   mode: isProd ? 'production' : 'development',
   entry: './src/index.tsx',
-  devtool: 'inline-source-map',
+  devtool: isProd ? 'source-map' : 'inline-source-map',
   output: {
     path: __dirname + '/dist/'
   },
@@ -31,6 +31,9 @@ const config = {
 
 if (isProd) {
   config.optimization = {
+    splitChunks: {
+      chunks: 'all'
+    },
     minimizer: [new TerserWebpackPlugin()]
   };
 } else {
