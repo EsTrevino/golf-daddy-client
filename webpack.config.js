@@ -1,14 +1,12 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const TerserWebpackPlugin = require('terser-webpack-plugin');
 
-module.exports = {
-  mode: 'development',
+const isProd = process.env.NODE_ENV === 'production';
+
+const config = {
+  mode: isProd ? 'production' : 'development',
   entry: './src/index.tsx',
   devtool: 'inline-source-map',
-  devServer: {
-    static: './dist',
-    hot: true,
-    port: 3000
-  },
   output: {
     path: __dirname + '/dist/'
   },
@@ -30,3 +28,18 @@ module.exports = {
     })
   ]
 };
+
+if (isProd) {
+  config.optimization = {
+    minimizer: [new TerserWebpackPlugin()]
+  };
+} else {
+  config.devServer = {
+    port: 3000,
+    hot: true,
+    compress: true,
+    open: true
+  };
+}
+
+module.exports = config;
